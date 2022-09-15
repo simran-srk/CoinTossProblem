@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+
+        finalTable = []
+        round = 1
+        overallScore = { Computer: 0, Player: 0 }
+        b = setInterval(() => {
+            numberOfToss()
+
+            if (round == 3) {
+
+                clearInterval(b)
+
+            } round++
+
+        }, 15000);
+
+
+        i = 1
+        function numberOfToss() {
+            console.log(`***********Round ${i}************`);
+            i++
+            r = 1
+            calculateHead = { Computer: 0, Player: 0 }
+            coin = ["head", "tail"]
+
+            a = setInterval(() => {
+                t1 = coin[Math.floor(Math.random() * 2)]
+                t2 = coin[Math.floor(Math.random() * 2)]
+
+                if (t1 == "head") {
+                    calculateHead.Computer += 1
+                    overallScore.Computer += 1
+                }
+                if (t2 == "head") {
+                    calculateHead.Player += 1
+                    overallScore.Player += 1
+                }
+                console.log(`Toss No. :- ${r}`)
+                console.log("Computer:", t1, "\n", "Player:", t2, "\n")
+                finalTable.push({ "Round": round, "Computer": t1, "Player": t2 })
+
+                if (r == 10) {
+                    clearInterval(a)
+                    console.log("No. of Heads:-")
+                    console.table(calculateHead)
+                    findingWinner()
+                }
+                r++
+            }, 1000);
+
+        }
+        numberOfToss()
+
+
+
+        function findingWinner() {
+            if (calculateHead.Computer > calculateHead.Player) {
+                console.log(`Computer won the round:- ${round}`)
+                console.log('------------------------------------------------------------');
+                console.table(overallScore)
+            }
+            else if (calculateHead.Computer < calculateHead.Player) {
+
+                console.log(`Player won the round:- ${round}`)
+                console.log('------------------------------------------------------------');
+                console.table(overallScore)
+            }
+            else if (calculateHead.Computer == calculateHead.Player) {
+                console.log(` Round:- ${round} Match Draw\n`)
+                console.log('------------------------------------------------------------');
+                console.table(overallScore)
+            }
+
+
+            if (round == 4) {
+                if (overallScore.Computer > overallScore.Player) {
+                    console.log("Computer Won The Match\n")
+                }
+                if (overallScore.Computer < overallScore.Player) {
+                    console.log("Player Won The Match\n")
+                }
+
+                console.log("***********FINAL OUTPUT TABLE *************");
+                getCsvFilForFinalResult()
+                console.table(finalTable)
+            }
+        }
+
+        function getCsvFilForFinalResult(){
+        cs = ""
+
+        for (i of finalTable) {
+            cs += i.Round + ","
+            cs += i.Computer + ","
+            cs += i.Player+ ","
+            cs += "\r\n"
+        }
+        console.log(cs)
+
+        let tempBlob = new Blob([cs], { type: "text\csv" })
+
+        let tempUrl = window.URL.createObjectURL(tempBlob)
+        let activation = document.createElement("a")
+        activation.href = tempUrl
+
+        activation.download = "coinProblem.csv"
+        activation.click()
+        window.URL.revokeObjectURL(tempUrl)
+        activation.remove()
+    }
+    </script>
+</body>
+
+</html>
